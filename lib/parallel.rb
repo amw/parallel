@@ -429,6 +429,9 @@ module Parallel
       parent_read, child_write = IO.pipe
 
       pid = Process.fork do
+        # prevent cleaning up of parent process resources
+        at_exit {exit!}
+
         begin
           options.delete(:started_workers).each(&:close_pipes)
 
